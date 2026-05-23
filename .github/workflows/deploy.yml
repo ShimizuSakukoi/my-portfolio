@@ -1,7 +1,7 @@
-# GitHub Actions 自动部署工作流
-# 每次 push 到 main 分支，自动构建并部署到 GitHub Pages
+# 自动部署到 GitHub Pages
+# 每次 push main 分支，自动构建并推送到 gh-pages 分支
 
-name: 部署到 GitHub Pages
+name: 部署
 
 on:
   push:
@@ -9,16 +9,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write
 
     steps:
       - name: 拉取代码
@@ -29,17 +23,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: 安装依赖
-        run: npm install
+      - name: 安装依赖 & 构建
+        run: npm install && npm run build
 
-      - name: 构建
-        run: npm run build
-
-      - name: 上传构建产物
-        uses: actions/upload-pages-artifact@v3
+      - name: 部署到 gh-pages 分支
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: ./dist
-
-      - name: 部署到 GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
