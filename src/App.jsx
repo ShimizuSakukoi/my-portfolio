@@ -26,7 +26,7 @@ function App() {
       {/* ========== 第一块：头像 + 名字 + 简介 ========== */}
       <section id="hero">
         {/* 头像：图片放在 public/avatar.svg，换图直接替换那个文件 */}
-        <img src="/avatar.jpg" alt="头像" className="avatar" />
+        <img src={`${import.meta.env.BASE_URL}avatar.jpg`} alt="头像" className="avatar" />
 
         {/* h1 是最大号标题 */}
         <h1>清水咲く恋</h1>
